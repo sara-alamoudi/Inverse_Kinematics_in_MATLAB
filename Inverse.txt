@@ -1,0 +1,43 @@
+x=input('Enter the Value of the x-component:');
+y=input('Enter the Value of the y-component:');
+%Let assume values for the length of the robotic arm;
+L1 = 4;
+L2 = 6;
+%assume the initial position
+x1 = 4*cosd(30);
+y1 = 4*sind(30);
+x2 = 6*cosd(55+30)+x1;
+y2 = 6*sind(55+30)+y1;
+x0 = 0;
+y0 = 0;
+plot([x0 x1],[y0 y1],'b-','LineWidth',2);
+xlabel('x-axis','FontSize',12);
+ylabel('y-axis','FontSize',12);
+title('Inverse Kinematics','FontSize',12);
+hold on;
+plot([x1 x2],[y1 y2],'b-','LineWidth',2);
+axis([-10 10 -10 10])
+grid on
+%Input (Calculate the End-Effect);
+Theta2 = acosd((x^2+y^2-L1^2-L2^2)/(2*L1*L2));
+if Theta2 >0
+Theta1 = atand(y/x)-atand(((L2*sind(Theta2))/(L1+L2*cosd(Theta2))));
+else 
+    Theta1 = atand(y/x)+atand(((L2*sind(Theta2))/(L1+L2*cosd(Theta2))));
+end
+disp(['The value of the first angle is:' num2str(Theta1)]);
+disp(['The value of the second angle is:' num2str(Theta2)]);
+
+for i = linspace(0,Theta1,1)
+    for j = linspace(0,Theta2,1)
+X1 = 4*cosd(i);
+Y1 = 4*sind(i);
+X2 = 6*cosd(i+j)+X1;
+Y2 = 6*sind(i+j)+Y1;
+plot([x0 X1],[x0 Y1],'m-','LineWidth',2);
+hold on;
+plot([X1 X2],[Y1 Y2],'m-','LineWidth',2);
+legend('','Blue for the initail position','Megenta based on the input','','Location','Best');
+pause(0.1);
+    end
+end
